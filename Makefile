@@ -1,17 +1,15 @@
-all: server client
+CC      = gcc
+# FLAGS   = -L /lib64
+# LIBS    = -lusb-1.0 -l pthread
+TARGETS = server client
+FLAGS   = -Wall -g3 -fsanitize=address
+LIBS    = -pthread
 
-server: server.c
-	gcc -Wall -g3 -fsanitize=address -pthread server.c -o server
+all: $(TARGETS)
 
-client: client.c
-	gcc -Wall -g3 -fsanitize=address -pthread client.c -o client
+$(TARGETS): %: %.c
+	$(CC) $(FLAGS) $(LIBS) $< -o $@
 
+.PHONY: clean
 clean:
-	rm server client
-
-compile:
-	gcc -Wall -g3 -fsanitize=address -pthread server.c -o server
-	gcc -Wall -g3 -fsanitize=address -pthread client.c -o client
-
-FLAGS    = -L /lib64
-LIBS     = -lusb-1.0 -l pthread
+	rm $(TARGETS)
